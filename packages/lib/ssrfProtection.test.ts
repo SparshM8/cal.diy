@@ -199,12 +199,16 @@ describe("Self-hosted environment behavior", () => {
     // GCP metadata
     expect(validateSelfHosted("http://metadata.google.internal/computeMetadata/v1/").isValid).toBe(false);
     expect(validateSelfHosted("http://metadata.google.com/computeMetadata/v1/").isValid).toBe(false);
-    // Azure alternate
+    it("still blocks cloud metadata endpoints even on self-hosted", async () => {
+    const { validateUrlForSSRFSync: validateSelfHosted } = await import("./ssrfProtection");
+    // Cloud instance and container metadata endpoints must remain unconditionally blocked to prevent credential extraction
+    expect(validateSelfHosted("http://169.254.169.254/latest/meta-data/").isValid).toBe(false);
+    expect(validateSelfHosted("http://metadata.google.internal/computeMetadata/v1/").isValid).toBe(false);
+    expect(validateSelfHosted("http://metadata.google.com/computeMetadata/v1/").isValid).toBe(false);
     expect(validateSelfHosted("http://169.254.169.253/metadata/instance").isValid).toBe(false);
-    // AWS ECS task metadata
     expect(validateSelfHosted("http://169.254.170.2/v2/metadata").isValid).toBe(false);
-    // Alibaba Cloud metadata
     expect(validateSelfHosted("http://100.100.100.200/latest/meta-data/").isValid).toBe(false);
+  });
   });
 
   it("allows HTTPS URLs for self-hosted", async () => {
