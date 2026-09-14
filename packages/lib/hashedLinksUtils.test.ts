@@ -64,19 +64,19 @@ describe("hashedLinksUtils", () => {
   });
 
   describe("filterActiveLinks", () => {
-    it("filters out links that are expired by time or usage", () => {
-      const futureDate = new Date(Date.now() + 1000000);
-      const pastDate = new Date(Date.now() - 1000000);
+  it("filters out links that are expired by time or usage", () => {
+    const futureDate = new Date(Date.now() + 1000000);
+    const pastDate = new Date(Date.now() - 1000000);
 
-      const links = [
-        { id: 1, expiresAt: futureDate, maxUsageCount: 1, usageCount: 0 }, // active
-        { id: 2, expiresAt: futureDate, maxUsageCount: 1, usageCount: 1 }, // expired by usage
-        { id: 3, expiresAt: pastDate, maxUsageCount: 5, usageCount: 0 }, // expired by time
-      ];
+    const links = [
+      { id: 1, expiresAt: futureDate, maxUsageCount: 1, usageCount: 0 },
+      { id: 2, expiresAt: futureDate, maxUsageCount: 1, usageCount: 1 },
+      { id: 3, expiresAt: pastDate, maxUsageCount: 5, usageCount: 0 },
+    ];
 
-      const active = filterActiveLinks(links);
-      expect(active).toHaveLength(1);
-      expect(active[0].id).toBe(1);
-    });
+    const active = filterActiveLinks(links);
+    expect(active).toHaveLength(1);
+    expect(active[0].id).toBe(1);
+  });
   });
 });
